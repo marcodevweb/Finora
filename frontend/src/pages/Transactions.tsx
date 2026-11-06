@@ -10,6 +10,7 @@ import { CustomSelect } from '../components/CustomSelect';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { validateForm } from '../lib/formValidation';
 import { DatePicker, formatDateValue, localDateValue } from '../components/DatePicker';
+import { MonthFilter } from '../components/MonthFilter';
 
 const getCategoryIcon = (name: string) => {
   const lower = (name || '').toLowerCase();
@@ -35,6 +36,7 @@ export const Transactions: React.FC = () => {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [monthFilter, setMonthFilter] = useState('');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +62,12 @@ export const Transactions: React.FC = () => {
       if (search) params.search = search;
       if (typeFilter) params.type = typeFilter;
       if (categoryFilter) params.categoryId = categoryFilter;
+      if (monthFilter) {
+        const [year, month] = monthFilter.split('-').map(Number);
+        const lastDay = new Date(year, month, 0).getDate();
+        params.startDate = `${monthFilter}-01`;
+        params.endDate = `${monthFilter}-${String(lastDay).padStart(2, '0')}`;
+      }
 
       const [txRes, catRes, accRes] = await Promise.all([
         api.get('/transactions', { params }),
@@ -92,7 +100,7 @@ export const Transactions: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-  }, [search, typeFilter, categoryFilter]);
+  }, [search, typeFilter, categoryFilter, monthFilter]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -223,7 +231,9 @@ export const Transactions: React.FC = () => {
           />
         </div>
 
-        <div className="flex flex-wrap gap-4 w-full md:w-auto">
+        <div className="flex flex-wrap items-end gap-4 w-full md:w-auto">
+          <MonthFilter value={monthFilter} onChange={setMonthFilter} />
+
           <div className="w-44">
             <CustomSelect
               value={typeFilter}
@@ -264,14 +274,23 @@ export const Transactions: React.FC = () => {
         <div className="py-20 text-center text-[#828282] font-inter">Carregando suas receitas e despesas...</div>
       ) : transactions.length === 0 ? (
         <EmptyState
-          title="Suas finanças começam aqui"
-          description="Registre seu primeiro salário ou gasto para acompanhar para onde seu dinheiro vai."
+          title={search || typeFilter || categoryFilter || monthFilter ? 'Nenhuma movimentação encontrada' : 'Suas finanças começam aqui'}
+          description={search || typeFilter || categoryFilter || monthFilter
+            ? 'Tente ajustar os filtros ou escolha outro mês.'
+            : 'Registre seu primeiro salário ou gasto para acompanhar para onde seu dinheiro vai.'}
           icon={ReceiptIcon}
-          actionLabel="Registrar receita ou despesa"
+          actionLabel={search || typeFilter || categoryFilter || monthFilter ? 'Limpar filtros' : 'Registrar receita ou despesa'}
           onAction={() => {
-            setEditingId(null);
-            resetForm();
-            setIsModalOpen(true);
+            if (search || typeFilter || categoryFilter || monthFilter) {
+              setSearch('');
+              setTypeFilter('');
+              setCategoryFilter('');
+              setMonthFilter('');
+            } else {
+              setEditingId(null);
+              resetForm();
+              setIsModalOpen(true);
+            }
           }}
         />
       ) : (
