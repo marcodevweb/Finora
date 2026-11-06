@@ -133,7 +133,7 @@ export const Reports: React.FC = () => {
     });
     return buckets;
   }, [transactions, range, period]);
-  const chartBarSize = Math.max(3, Math.min(22, Math.floor(
+  const chartBarSize = Math.max(3, Math.min(44, Math.floor(
     (chartViewportWidth - 140) / Math.max(chartData.length, 1) / (selectedType ? 1.3 : 2.2),
   )));
 
