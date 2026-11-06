@@ -265,7 +265,7 @@ export const Transactions: React.FC = () => {
               type="button"
               onClick={exportTransactions}
               disabled={transactions.length === 0}
-              className={`inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:col-span-2 xl:col-span-1 xl:w-auto ${isDark ? 'border-[#333] text-white hover:bg-[#242424]' : 'border-[#e8e8e8] text-[#202020] hover:bg-[#f8f8f8]'}`}
+              className={`inline-flex h-[3.125rem] w-full items-center justify-center gap-2 rounded-xl border px-4 text-sm whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:col-span-2 xl:col-span-1 xl:w-48 ${isDark ? 'border-[#333] text-white hover:bg-[#242424]' : 'border-[#e8e8e8] text-[#202020] hover:bg-[#f8f8f8]'}`}
             >
               <Download className="w-4 h-4" />
               <span>Exportar CSV</span>
