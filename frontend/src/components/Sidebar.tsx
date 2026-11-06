@@ -48,7 +48,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     }`}>
       {/* Top section: Logo & Nav */}
       <div>
-        <div className="h-24 px-8 flex items-center gap-3 border-b border-inherit">
+        <div className="h-24 px-8 flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center text-[#ff682c]">
             <FinoraMark className="w-8 h-8" />
           </div>
