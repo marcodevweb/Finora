@@ -36,8 +36,15 @@ export const Reports: React.FC = () => {
   const [referenceDate, setReferenceDate] = useState(localDateValue);
   const [customStart, setCustomStart] = useState(localDateValue);
   const [customEnd, setCustomEnd] = useState(localDateValue);
+  const [chartViewportWidth, setChartViewportWidth] = useState(() => window.innerWidth);
   const { isDark } = useTheme();
   const { showToast } = useToast();
+
+  useEffect(() => {
+    const updateWidth = () => setChartViewportWidth(window.innerWidth);
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   const range = useMemo(() => {
     const anchor = dateFromValue(referenceDate);
@@ -124,6 +131,9 @@ export const Reports: React.FC = () => {
     });
     return buckets;
   }, [transactions, range, period]);
+  const chartBarSize = Math.max(3, Math.min(22, Math.floor(
+    (chartViewportWidth - 140) / Math.max(chartData.length, 1) / (selectedType ? 1.3 : 2.2),
+  )));
 
   const categoryBreakdown = useMemo(() => {
     const totalsByCategory = new Map<string, { id: string; name: string; amount: number }>();
@@ -241,12 +251,12 @@ export const Reports: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: 2, bottom: 0 }}>
                 <CartesianGrid vertical={false} stroke={isDark ? '#333' : '#ededed'} />
-                <XAxis dataKey="label" stroke="#828282" fontSize={12} tickLine={false} interval="preserveStartEnd" />
+                <XAxis dataKey="label" stroke="#828282" fontSize={12} tickLine={false} interval={chartData.length > 14 ? 3 : 0} />
                 <YAxis width={76} tickMargin={8} stroke="#828282" fontSize={12} tickLine={false} tickFormatter={(value) => `R$ ${Number(value).toLocaleString('pt-BR')}`} />
                 <Tooltip formatter={(value: number) => formatCurrency(Number(value))} cursor={false} contentStyle={{ backgroundColor: isDark ? '#1a1a1a' : '#ffffff', borderColor: isDark ? '#2a2a2a' : '#e8e8e8', borderRadius: '8px', color: isDark ? '#ffffff' : '#202020', fontFamily: 'Inter' }} />
                 <Legend />
-                {selectedType !== 'EXPENSE' && <Bar dataKey="income" name="Receitas" fill="#22c55e" activeBar={{ fill: '#22c55e' }} radius={[4, 4, 0, 0]} />}
-                {selectedType !== 'INCOME' && <Bar dataKey="expense" name="Despesas" fill="#ef4444" activeBar={{ fill: '#ef4444' }} radius={[4, 4, 0, 0]} />}
+                {selectedType !== 'EXPENSE' && <Bar dataKey="income" name="Receitas" barSize={chartBarSize} fill="#22c55e" activeBar={{ fill: '#22c55e' }} radius={[4, 4, 0, 0]} />}
+                {selectedType !== 'INCOME' && <Bar dataKey="expense" name="Despesas" barSize={chartBarSize} fill="#ef4444" activeBar={{ fill: '#ef4444' }} radius={[4, 4, 0, 0]} />}
               </BarChart>
             </ResponsiveContainer>
           </div>
