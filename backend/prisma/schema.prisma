@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  passwordHash  String
+  name          String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  accounts      Account[]
+  categories    Category[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  goals         FinancialGoal[]
+  creditCards   CreditCard[]
+}
+
+model Account {
+  id           String        @id @default(uuid())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  type         String        // CHECKING, SAVINGS, INVESTMENT, CREDIT_CARD
+  balance      Float         @default(0.00)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  userId       String?       // Null for default system categories, user id for custom
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  type         String        // INCOME, EXPENSE
+  color        String?       // Hex color code
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  transactions Transaction[]
+  budgets      Budget[]
+}
+
+model Transaction {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId   String
+  account     Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  amount      Float
+  type        String    // INCOME, EXPENSE
+  description String
+  date        DateTime  @default(now())
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([date])
+}
+
+model Budget {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  amount     Float
+  month      Int      // 1-12
+  year       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, categoryId, month, year])
+}
+
+model FinancialGoal {
+  id            String             @id @default(uuid())
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  targetAmount  Float
+  currentAmount Float              @default(0.00)
+  deadline      DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  contributions GoalContribution[]
+}
+
+model GoalContribution {
+  id        String        @id @default(uuid())
+  goalId    String
+  goal      FinancialGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  amount    Float
+  date      DateTime      @default(now())
+  notes     String?
+  createdAt DateTime      @default(now())
+}
+
+model CreditCard {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  limit        Float
+  closingDay   Int
+  dueDay       Int
+  color        String?  @default("#ff682c")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

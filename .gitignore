@@ -1,0 +1,29 @@
+# Dependencies and generated builds
+**/node_modules/
+**/dist/
+.vercel/
+
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local databases and logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+npm-debug.log*
+
+# Local browser/design audit artifacts
+frontend/.impeccable/
+frontend/.playwright-cli/
+frontend/*.png
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
