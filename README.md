@@ -25,13 +25,28 @@ O **Finora** é uma aplicação web para organizar receitas, despesas, orçament
 
 ## Tecnologias
 
-| Área | Tecnologias |
+<p>
+  <img alt="React" src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
+  <img alt="Recharts" src="https://img.shields.io/badge/Recharts-22B5BF?style=flat-square&logo=react&logoColor=white" />
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
+  <img alt="Express" src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white" />
+  <img alt="Prisma" src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" />
+  <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
+  <img alt="SQLite" src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" />
+  <img alt="Vercel" src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
+</p>
+
+| Área | Tecnologias e ferramentas |
 | --- | --- |
-| Interface | React, TypeScript, Vite e Tailwind CSS |
+| Interface | React, TypeScript, Vite, Tailwind CSS, React Router, Axios e Lucide |
 | Gráficos | Recharts |
 | API | Node.js, Express e TypeScript |
-| Banco de dados | PostgreSQL e Prisma |
-| Autenticação | Cookie HttpOnly com JWT e senhas protegidas com bcrypt |
+| Banco de dados | PostgreSQL no deploy, SQLite no desenvolvimento local e Prisma ORM |
+| Autenticação | JWT em cookie HttpOnly e senhas protegidas com bcryptjs |
+| Deploy | Vercel |
 
 ## Executar localmente
 
