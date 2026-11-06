@@ -23,7 +23,7 @@ O **Finora** é uma aplicação web para organizar receitas, despesas, orçament
 - Tema claro e escuro.
 - Persistência por usuário em PostgreSQL.
 
-## Tecnologias
+## Tecnologias e ferramentas
 
 <p>
   <img alt="React" src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" />
@@ -38,7 +38,7 @@ O **Finora** é uma aplicação web para organizar receitas, despesas, orçament
   <img alt="SQLite" src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" />
 </p>
 
-| Área | Tecnologias e ferramentas |
+| Área | Uso no projeto |
 | --- | --- |
 | Interface | React, TypeScript, Vite, Tailwind CSS, React Router, Axios e Lucide |
 | Gráficos | Recharts |
