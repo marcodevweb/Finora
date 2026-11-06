@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Receipt, PieChart, Target, FileText, LogOut, Sun, Moon, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { FinoraMark } from './FinoraMark';
 import api from '../services/api';
 
 export const Sidebar: React.FC = () => {
@@ -32,10 +33,10 @@ export const Sidebar: React.FC = () => {
       {/* Top section: Logo & Nav */}
       <div>
         <div className="h-24 px-8 flex items-center gap-3 border-b border-inherit">
-          <div className={`w-10 h-10 flex items-center justify-center font-polysans font-medium text-lg rounded-xl shadow-md ${
-            isDark ? 'bg-white text-[#121212]' : 'bg-[#202020] text-white'
+          <div className={`w-10 h-10 flex items-center justify-center rounded-xl shadow-md text-[#ff682c] ${
+            isDark ? 'bg-white' : 'bg-[#202020]'
           }`}>
-            F
+            <FinoraMark className="w-6 h-6" />
           </div>
           <div>
             <span className={`font-polysans text-2xl font-semibold tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>

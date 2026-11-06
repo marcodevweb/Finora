@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
 import { validateForm } from '../lib/formValidation';
 import { useTheme } from '../context/ThemeContext';
+import { FinoraMark } from '../components/FinoraMark';
 
 export const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -45,8 +46,8 @@ export const Register: React.FC = () => {
       <div className="flex flex-col justify-between p-6 md:p-12">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 flex items-center justify-center font-polysans font-bold text-lg rounded-xl bg-[#202020] text-white shadow-md dark:bg-white dark:text-[#121212]">
-              F
+            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#202020] text-[#ff682c] shadow-md dark:bg-white">
+              <FinoraMark className="w-6 h-6" />
             </div>
             <div>
               <span className="font-polysans text-2xl font-semibold tracking-tight">
