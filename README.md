@@ -36,7 +36,6 @@ O **Finora** é uma aplicação web para organizar receitas, despesas, orçament
   <img alt="Prisma" src="https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" />
   <img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
   <img alt="SQLite" src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" />
-  <img alt="Vercel" src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
 </p>
 
 | Área | Tecnologias e ferramentas |
@@ -46,7 +45,6 @@ O **Finora** é uma aplicação web para organizar receitas, despesas, orçament
 | API | Node.js, Express e TypeScript |
 | Banco de dados | PostgreSQL no deploy, SQLite no desenvolvimento local e Prisma ORM |
 | Autenticação | JWT em cookie HttpOnly e senhas protegidas com bcryptjs |
-| Deploy | Vercel |
 
 ## Executar localmente
 
