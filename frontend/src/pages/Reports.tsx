@@ -76,23 +76,24 @@ export const Reports: React.FC = () => {
     <div className={`space-y-12 transition-colors duration-300 ${isDark ? 'text-[#f5f5f5]' : 'text-[#202020]'}`}>
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="grid grid-cols-1 items-end gap-5 xl:grid-cols-[minmax(0,1fr)_auto]">
         <div>
-          <h1 className={`font-polysans text-4xl font-normal tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>Como estão suas finanças</h1>
+          <h1 className={`font-polysans text-3xl sm:text-4xl font-normal tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>Como estão suas finanças</h1>
           <p className={`text-sm font-inter mt-1 ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>
             Compare suas receitas e despesas e veja como seus gastos mudam ao longo do tempo.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,208px)_auto] sm:items-end">
           <MonthFilter
             value={selectedMonth}
             onChange={(month) => setSelectedMonth(month || currentMonthValue())}
             clearable={false}
+            className="sm:w-52"
           />
           <button
             onClick={handleExportCSV}
-            className={`flex items-center gap-2 px-6 py-3.5 font-polysans text-sm rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg ${
+            className={`flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-3.5 font-polysans text-sm transition-all duration-300 sm:w-auto sm:px-6 ${
               isDark ? 'bg-[#1a1a1a] text-white hover:bg-[#ff682c] border border-[#2e2e2e]' : 'bg-[#202020] text-white hover:bg-[#ff682c]'
             }`}
           >

@@ -188,25 +188,25 @@ export const Transactions: React.FC = () => {
   };
 
   return (
-    <div className={`space-y-10 transition-colors duration-300 ${isDark ? 'text-[#f5f5f5]' : 'text-[#202020]'}`}>
+    <div className={`space-y-6 sm:space-y-10 transition-colors duration-300 ${isDark ? 'text-[#f5f5f5]' : 'text-[#202020]'}`}>
 
       {/* Header & CTA */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
         <div>
-          <h1 className={`font-polysans text-4xl font-normal tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>Receitas e despesas</h1>
+          <h1 className={`font-polysans text-3xl sm:text-4xl font-normal tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>Receitas e despesas</h1>
           <p className={`text-sm font-inter mt-1 ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>
             Registre seu salário, compras e outras entradas ou saídas de dinheiro.
           </p>
         </div>
 
-        <div>
+        <div className="w-full xl:w-auto">
           <button
             onClick={() => {
               setEditingId(null);
               resetForm();
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 bg-[#ff682c] text-white font-polysans text-sm py-3.5 px-6 rounded-xl hover:bg-[#e05620] transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-md hover:shadow-lg"
+            className="w-full xl:w-auto flex items-center justify-center gap-2 bg-[#ff682c] text-white font-polysans text-sm py-3.5 px-6 rounded-xl hover:bg-[#e05620] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg"
           >
             <Plus className="w-4 h-4" />
             <span>Registrar receita ou despesa</span>
@@ -215,57 +215,60 @@ export const Transactions: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className={`rounded-2xl p-6 transition-all duration-300 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between ${
+      <div className={`rounded-2xl p-4 sm:p-6 transition-all duration-300 shadow-sm ${
         isDark ? 'bg-[#1a1a1a] border border-[#2e2e2e]' : 'bg-white border border-[#e8e8e8]'
       }`}>
-        <div className="relative w-full md:w-96">
-          <Search className="absolute left-4 top-3.5 w-4 h-4 text-[#828282]" />
-          <input
-            type="text"
-            placeholder="Buscar por descrição..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className={`w-full pl-11 pr-4 py-3 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff682c] transition-all ${
-              isDark ? 'bg-[#242424] border border-[#333] text-white' : 'bg-white border border-[#e8e8e8]'
-            }`}
-          />
-        </div>
-
-        <div className="flex flex-wrap items-end gap-4 w-full md:w-auto">
-          <MonthFilter value={monthFilter} onChange={setMonthFilter} />
-
-          <div className="w-44">
-            <CustomSelect
-              value={typeFilter}
-              onChange={(val) => setTypeFilter(val)}
-              options={[
-                { value: '', label: 'Todos os Tipos' },
-                { value: 'INCOME', label: 'Receitas' },
-                { value: 'EXPENSE', label: 'Despesas' },
-              ]}
-            />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-end">
+          <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
+            <div className="relative w-full min-w-0 sm:flex-1">
+              <Search className="absolute left-4 top-3.5 w-4 h-4 text-[#828282]" />
+              <input
+                type="text"
+                placeholder="Buscar por descrição..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className={`w-full pl-11 pr-4 py-3 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff682c] transition-all ${
+                  isDark ? 'bg-[#242424] border border-[#333] text-white' : 'bg-white border border-[#e8e8e8]'
+                }`}
+              />
+            </div>
+            <MonthFilter value={monthFilter} onChange={setMonthFilter} />
           </div>
 
-          <div className="w-56">
-            <CustomSelect
-              value={categoryFilter}
-              onChange={(val) => setCategoryFilter(val)}
-              options={[
-                { value: '', label: 'Todas as Categorias' },
-                ...categories.map(c => ({ value: c.id, label: c.name }))
-              ]}
-            />
-          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(128px,0.8fr)_minmax(160px,1.1fr)_auto] xl:items-end">
+            <div className="w-full">
+              <CustomSelect
+                value={typeFilter}
+                onChange={(val) => setTypeFilter(val)}
+                options={[
+                  { value: '', label: 'Todos os Tipos' },
+                  { value: 'INCOME', label: 'Receitas' },
+                  { value: 'EXPENSE', label: 'Despesas' },
+                ]}
+              />
+            </div>
 
-          <button
-            type="button"
-            onClick={exportTransactions}
-            disabled={transactions.length === 0}
-            className={`inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isDark ? 'border-[#333] text-white hover:bg-[#242424]' : 'border-[#e8e8e8] text-[#202020] hover:bg-[#f8f8f8]'}`}
-          >
-            <Download className="w-4 h-4" />
-            <span>Exportar CSV</span>
-          </button>
+            <div className="w-full">
+              <CustomSelect
+                value={categoryFilter}
+                onChange={(val) => setCategoryFilter(val)}
+                options={[
+                  { value: '', label: 'Todas as Categorias' },
+                  ...categories.map(c => ({ value: c.id, label: c.name }))
+                ]}
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={exportTransactions}
+              disabled={transactions.length === 0}
+              className={`inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed sm:col-span-2 xl:col-span-1 xl:w-auto ${isDark ? 'border-[#333] text-white hover:bg-[#242424]' : 'border-[#e8e8e8] text-[#202020] hover:bg-[#f8f8f8]'}`}
+            >
+              <Download className="w-4 h-4" />
+              <span>Exportar CSV</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -297,7 +300,7 @@ export const Transactions: React.FC = () => {
         <div className={`rounded-2xl overflow-hidden shadow-sm transition-colors duration-300 ${
           isDark ? 'bg-[#1a1a1a] border border-[#2e2e2e]' : 'bg-white border border-[#e8e8e8]'
         }`}>
-          <div className="overflow-x-auto">
+          <div className="hidden overflow-x-auto xl:block">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className={`border-b text-xs uppercase tracking-wider font-polysans ${
@@ -367,17 +370,70 @@ export const Transactions: React.FC = () => {
               </tbody>
             </table>
           </div>
+          <div className="divide-y xl:hidden">
+            {transactions.map((tx) => {
+              const CatIcon = getCategoryIcon(tx.category?.name);
+              const isIncome = tx.type === 'INCOME';
+              return (
+                <article key={tx.id} className={`p-4 ${isDark ? 'border-[#2e2e2e]' : 'border-[#e8e8e8]'}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+                        isIncome ? 'bg-emerald-500/10 text-emerald-500' : 'bg-[#ff682c]/10 text-[#ff682c]'
+                      }`}>
+                        <CatIcon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className={`truncate font-polysans text-sm font-medium ${isDark ? 'text-white' : 'text-[#202020]'}`}>
+                          {tx.description}
+                        </p>
+                        <p className="mt-0.5 truncate font-inter text-xs text-[#828282]">
+                          {tx.category?.name || 'Sem categoria'} · {tx.account?.name || 'Conta Principal'}
+                        </p>
+                      </div>
+                    </div>
+                    <span className={`shrink-0 text-right font-polysans text-sm font-medium tabular-nums ${
+                      isIncome ? 'text-emerald-500' : isDark ? 'text-white' : 'text-[#202020]'
+                    }`}>
+                      {isIncome ? '+ ' : '- '}{formatCurrency(tx.amount)}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <time className="font-inter text-xs text-[#828282]">{formatDateValue(tx.date.slice(0, 10))}</time>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(tx)}
+                        aria-label={`Editar ${tx.description}`}
+                        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#828282] hover:bg-[#ff682c]/10 hover:text-[#ff682c]"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTransactionId(tx.id)}
+                        aria-label={`Excluir ${tx.description}`}
+                        className="flex h-11 w-11 items-center justify-center rounded-lg text-[#828282] hover:bg-red-500/10 hover:text-red-500"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       )}
 
       {/* Modal */}
       {isModalOpen && ReactDOM.createPortal(
         <div className="fixed inset-0 z-[100] w-screen h-screen bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-          <div className={`rounded-2xl max-w-lg w-full p-8 shadow-2xl relative transition-all duration-300 ${
+          <div className={`relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl p-5 shadow-2xl transition-all duration-300 sm:p-8 ${
             isDark ? 'bg-[#1a1a1a] border border-[#2e2e2e] text-white' : 'bg-white text-[#202020]'
           }`}>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-polysans text-2xl font-normal">
+              <h3 className="font-polysans text-xl font-normal sm:text-2xl">
                 {editingId ? 'Editar Transação' : 'Registrar receita ou despesa'}
               </h3>
               <button
@@ -389,7 +445,7 @@ export const Transactions: React.FC = () => {
             </div>
 
             <form noValidate onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className={`block font-polysans text-xs uppercase tracking-wider mb-1 ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>Tipo</label>
                   <CustomSelect

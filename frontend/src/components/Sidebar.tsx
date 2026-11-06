@@ -5,7 +5,12 @@ import { useTheme } from '../context/ThemeContext';
 import { FinoraMark } from './FinoraMark';
 import api from '../services/api';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isDark, toggleTheme } = useTheme();
@@ -27,7 +32,18 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className={`w-72 fixed inset-y-0 left-0 z-40 flex flex-col justify-between border-r transition-colors duration-300 ${
+    <>
+    {isOpen && (
+      <button
+        type="button"
+        aria-label="Fechar menu"
+        onClick={onClose}
+        className="fixed inset-0 z-40 bg-black/45 xl:hidden"
+      />
+    )}
+    <aside className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between border-r transition-all duration-300 xl:translate-x-0 ${
+      isOpen ? 'translate-x-0 shadow-2xl md:shadow-none' : '-translate-x-full'
+    } ${
       isDark ? 'bg-[#161616] border-[#2e2e2e]' : 'bg-[#f8f8f8] border-[#e8e8e8]'
     }`}>
       {/* Top section: Logo & Nav */}
@@ -52,6 +68,7 @@ export const Sidebar: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={onClose}
                 className={`flex items-center gap-3.5 px-4 py-3.5 rounded-xl font-polysans text-sm transition-all duration-300 group ${
                   isActive
                     ? 'bg-[#ff682c] text-white shadow-lg shadow-[#ff682c]/20 transform translate-x-1'
@@ -112,5 +129,6 @@ export const Sidebar: React.FC = () => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
