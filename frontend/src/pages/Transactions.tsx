@@ -221,13 +221,15 @@ export const Transactions: React.FC = () => {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-end">
           <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-end">
             <div className="relative w-full min-w-0 sm:flex-1">
-              <Search className="absolute left-4 top-3.5 w-4 h-4 text-[#828282]" />
+              <span aria-hidden="true" className="mb-1.5 hidden h-4 sm:block" />
+              <Search className="absolute left-4 top-[2.4375rem] w-4 h-4 text-[#828282]" />
               <input
                 type="text"
                 placeholder="Buscar por descrição..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className={`w-full pl-11 pr-4 py-3 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff682c] transition-all ${
+                aria-label="Buscar por descrição"
+                className={`h-[3.125rem] w-full pl-11 pr-4 text-sm rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff682c] transition-all ${
                   isDark ? 'bg-[#242424] border border-[#333] text-white' : 'bg-white border border-[#e8e8e8]'
                 }`}
               />
