@@ -33,10 +33,8 @@ export const Sidebar: React.FC = () => {
       {/* Top section: Logo & Nav */}
       <div>
         <div className="h-24 px-8 flex items-center gap-3 border-b border-inherit">
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl shadow-md text-[#ff682c] ${
-            isDark ? 'bg-white' : 'bg-[#202020]'
-          }`}>
-            <FinoraMark className="w-6 h-6" />
+          <div className="w-10 h-10 flex items-center justify-center text-[#ff682c]">
+            <FinoraMark className="w-8 h-8" />
           </div>
           <div>
             <span className={`font-polysans text-2xl font-semibold tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>

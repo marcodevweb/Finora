@@ -35,10 +35,8 @@ export const Navbar: React.FC = () => {
 
         {/* Brand Logo */}
         <Link to="/dashboard" className="flex items-center gap-3 group">
-          <div className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 transform group-hover:scale-105 shadow-md text-[#ff682c] ${
-            isDark ? 'bg-white' : 'bg-[#202020]'
-          }`}>
-            <FinoraMark className="w-6 h-6" />
+          <div className="w-10 h-10 flex items-center justify-center text-[#ff682c] transition-transform duration-300 transform group-hover:scale-105">
+            <FinoraMark className="w-8 h-8" />
           </div>
           <span className={`font-polysans text-2xl font-semibold tracking-tight ${isDark ? 'text-white' : 'text-[#202020]'}`}>
             Finora<span className="text-[#ff682c]">.</span>

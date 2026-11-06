@@ -47,8 +47,8 @@ export const Login: React.FC = () => {
         {/* Top Header / Logo */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#202020] text-[#ff682c] shadow-md dark:bg-white">
-              <FinoraMark className="w-6 h-6" />
+            <div className="w-10 h-10 flex items-center justify-center text-[#ff682c]">
+              <FinoraMark className="w-8 h-8" />
             </div>
             <div>
               <span className="font-polysans text-2xl font-semibold tracking-tight">
