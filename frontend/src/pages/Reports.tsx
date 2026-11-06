@@ -119,7 +119,8 @@ export const Reports: React.FC = () => {
       const date = bucketByMonth ? new Date(range.start.getFullYear(), range.start.getMonth() + index, 1) : addDays(range.start, index * (bucketByWeek ? 7 : 1));
       const key = bucketByMonth ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}` : toISODate(date);
       const weekEnd = addDays(date, Math.min(6, Math.round((range.end.getTime() - date.getTime()) / 86400000)));
-      return { key, label: bucketByWeek ? `${dayLabel(date)}–${dayLabel(weekEnd)}` : bucketByMonth ? monthLabel(date) : period === 'week' ?
+      const weekLabel = `${date.getDate()}–${weekEnd.getDate()} ${monthLabel(date)}`;
+      return { key, label: bucketByWeek ? weekLabel : bucketByMonth ? monthLabel(date) : period === 'week' ?
         new Intl.DateTimeFormat('pt-BR', { weekday: 'short' }).format(date).replace('.', '') : dayLabel(date), income: 0, expense: 0 };
     });
     const bucketIndex = new Map(buckets.map((bucket, index) => [bucket.key, index]));
