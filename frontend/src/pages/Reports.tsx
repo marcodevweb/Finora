@@ -111,20 +111,22 @@ export const Reports: React.FC = () => {
 
   const chartData = useMemo(() => {
     const daySpan = Math.max(1, Math.round((range.end.getTime() - range.start.getTime()) / 86400000) + 1);
+    const bucketByWeek = period === 'month';
     const bucketByMonth = period === 'year' || (period === 'custom' && daySpan > 31);
-    const bucketCount = bucketByMonth ?
+    const bucketCount = bucketByWeek ? Math.ceil(daySpan / 7) : bucketByMonth ?
       (range.end.getFullYear() - range.start.getFullYear()) * 12 + range.end.getMonth() - range.start.getMonth() + 1 : daySpan;
     const buckets = Array.from({ length: bucketCount }, (_, index) => {
-      const date = bucketByMonth ? new Date(range.start.getFullYear(), range.start.getMonth() + index, 1) : addDays(range.start, index);
+      const date = bucketByMonth ? new Date(range.start.getFullYear(), range.start.getMonth() + index, 1) : addDays(range.start, index * (bucketByWeek ? 7 : 1));
       const key = bucketByMonth ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}` : toISODate(date);
-      return { key, label: bucketByMonth ? monthLabel(date) : period === 'week' ?
+      const weekEnd = addDays(date, Math.min(6, Math.round((range.end.getTime() - date.getTime()) / 86400000)));
+      return { key, label: bucketByWeek ? `${dayLabel(date)}–${dayLabel(weekEnd)}` : bucketByMonth ? monthLabel(date) : period === 'week' ?
         new Intl.DateTimeFormat('pt-BR', { weekday: 'short' }).format(date).replace('.', '') : dayLabel(date), income: 0, expense: 0 };
     });
     const bucketIndex = new Map(buckets.map((bucket, index) => [bucket.key, index]));
     transactions.forEach((transaction) => {
       const date = dateFromValue(transaction.date.slice(0, 10));
       const key = bucketByMonth ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}` : toISODate(date);
-      const index = bucketIndex.get(key);
+      const index = bucketByWeek ? Math.floor((date.getTime() - range.start.getTime()) / (7 * 86400000)) : bucketIndex.get(key);
       if (index === undefined) return;
       if (transaction.type === 'INCOME') buckets[index].income += Number(transaction.amount);
       else buckets[index].expense += Number(transaction.amount);
@@ -244,7 +246,7 @@ export const Reports: React.FC = () => {
       <section className={`rounded-2xl border p-5 sm:p-8 lg:p-10 ${filterSurface}`}>
         <div className="mb-6">
           <h2 className={`font-polysans text-xl sm:text-2xl font-normal ${isDark ? 'text-white' : 'text-[#202020]'}`}>Movimentações: {periodName}</h2>
-          <p className={`mt-1 text-sm font-inter ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>Valores agrupados por {period === 'year' || (period === 'custom' && chartData.length > 31) ? 'mês' : 'dia'}.</p>
+          <p className={`mt-1 text-sm font-inter ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>Valores agrupados por {period === 'month' ? 'semana' : period === 'year' || (period === 'custom' && chartData.length > 31) ? 'mês' : 'dia'}.</p>
         </div>
         {loading ? <p className="py-12 text-center text-sm text-[#828282]">Atualizando relatório…</p> : transactions.length === 0 ? <p className="py-12 text-center text-sm text-[#828282]">Nenhuma movimentação neste período e filtro.</p> : (
           <div className="h-[300px] w-full sm:h-[340px]">
