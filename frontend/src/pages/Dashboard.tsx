@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import api from '../services/api';
 import { DashboardSummary } from '../types';
-import { TrendingUp, TrendingDown, Plus, ArrowRight, PieChart } from 'lucide-react';
+import { TrendingUp, TrendingDown, Plus, ArrowRight, PieChart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -10,12 +10,18 @@ export const Dashboard: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
   const { isDark } = useTheme();
 
-  const fetchDashboard = async () => {
+  const fetchDashboard = useCallback(async (month: Date) => {
     try {
       setLoading(true);
-      const res = await api.get('/dashboard');
+      const res = await api.get('/dashboard', {
+        params: { month: month.getMonth() + 1, year: month.getFullYear() },
+      });
       setSummary(res.data);
     } catch (err) {
       console.error(err);
@@ -23,11 +29,11 @@ export const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchDashboard();
-  }, []);
+    fetchDashboard(selectedMonth);
+  }, [fetchDashboard, selectedMonth]);
 
   if (loading) {
     return (
@@ -41,15 +47,19 @@ export const Dashboard: React.FC = () => {
     return (
       <div className={`p-8 rounded-2xl text-center transition-colors duration-300 ${isDark ? 'bg-[#1a1a1a] text-[#f5f5f5] border border-[#2a2a2a]' : 'bg-white border border-[#e8e8e8]'}`}>
         <p className="text-[#ff682c] font-inter">{error || 'Erro inesperado.'}</p>
-        <button onClick={fetchDashboard} className="mt-4 px-6 py-2 bg-[#ff682c] text-white font-polysans rounded-xl">
+        <button onClick={() => fetchDashboard(selectedMonth)} className="mt-4 px-6 py-2 bg-[#ff682c] text-white font-polysans rounded-xl">
           Tentar novamente
         </button>
       </div>
     );
   }
 
-  const monthName = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(new Date());
-  const savingsLabel = summary.monthlySavings >= 0 ? 'Sobrou neste mês' : 'Faltou neste mês';
+  const monthName = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(selectedMonth);
+  const currentDate = new Date();
+  const isEarliestMonth = selectedMonth.getFullYear() === 2000 && selectedMonth.getMonth() === 0;
+  const isCurrentOrFutureMonth = selectedMonth.getFullYear() > currentDate.getFullYear()
+    || (selectedMonth.getFullYear() === currentDate.getFullYear() && selectedMonth.getMonth() >= currentDate.getMonth());
+  const savingsLabel = summary.monthlySavings >= 0 ? 'Sobrou no mês' : 'Faltou no mês';
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
@@ -66,11 +76,29 @@ export const Dashboard: React.FC = () => {
           isDark ? 'bg-[#1a1a1a] border border-[#2e2e2e]' : 'bg-white border border-[#e8e8e8]'
         }`}>
           <div>
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-polysans mb-6 ${
+            <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-polysans mb-6 ${
               isDark ? 'bg-[#242424] text-[#ff682c] border border-[#333]' : 'bg-white text-[#816729]'
             }`}>
+              <button
+                type="button"
+                aria-label="Ver mês anterior"
+                disabled={isEarliestMonth}
+                onClick={() => setSelectedMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+                className="rounded-full p-1 hover:bg-black/5 dark:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
               <span aria-hidden="true" className="w-2 h-2 rounded-full bg-[#ff682c]" />
-              <span>{monthName}</span>
+              <span className="capitalize">{monthName}</span>
+              <button
+                type="button"
+                aria-label="Ver próximo mês"
+                disabled={isCurrentOrFutureMonth}
+                onClick={() => setSelectedMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+                className="rounded-full p-1 hover:bg-black/5 dark:hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
             <h1 className={`font-polysans text-4xl sm:text-5xl font-normal tracking-tight leading-none mb-4 ${isDark ? 'text-white' : 'text-[#202020]'}`}>
               Resumo do mês
@@ -159,7 +187,7 @@ export const Dashboard: React.FC = () => {
               Receitas e despesas ao longo do tempo
             </h3>
             <p className={`text-sm font-inter mt-1 ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>
-              Compare o que entrou e saiu nos últimos 6 meses.
+              Compare receitas e despesas nos seis meses até {monthName}.
             </p>
           </div>
           <div className="flex items-center gap-6 mt-4 sm:mt-0 font-polysans text-xs">
@@ -223,12 +251,12 @@ export const Dashboard: React.FC = () => {
               <PieChart className="w-5 h-5 text-[#828282]" />
             </div>
             <p className={`text-sm font-inter mb-6 ${isDark ? 'text-[#a0a0a0]' : 'text-[#4d4d4d]'}`}>
-              Despesas deste mês, separadas por categoria.
+              Despesas de {monthName}, separadas por categoria.
             </p>
 
             {summary.categoryBreakdown.length === 0 ? (
               <div className="py-12 text-center text-[#828282] font-inter text-sm">
-                Nenhuma despesa registrada neste mês.
+                Nenhuma despesa registrada em {monthName}.
               </div>
             ) : (
               <div className="space-y-4">
@@ -278,7 +306,7 @@ export const Dashboard: React.FC = () => {
 
             {summary.latestTransactions.length === 0 ? (
               <div className="py-12 text-center text-[#828282] font-inter text-sm">
-                Nenhuma transação recente.
+              Nenhuma transação registrada em {monthName}.
               </div>
             ) : (
               <div className="space-y-4">
@@ -324,11 +352,11 @@ export const Dashboard: React.FC = () => {
           isDark ? 'bg-[#1a1a1a] border border-[#2e2e2e]' : 'bg-white border border-[#e8e8e8]'
         }`}>
           <div className="flex items-center justify-between mb-6">
-            <h3 className={`font-polysans text-xl font-normal ${isDark ? 'text-white' : 'text-[#202020]'}`}>Seu orçamento deste mês</h3>
+            <h3 className={`font-polysans text-xl font-normal ${isDark ? 'text-white' : 'text-[#202020]'}`}>Orçamento de {monthName}</h3>
             <Link to="/budgets" className="text-sm font-polysans text-[#ff682c] hover:underline">Ver detalhes</Link>
           </div>
           {summary.budgetsOverview.length === 0 ? (
-            <p className="text-sm text-[#828282] font-inter py-6">Nenhum orçamento configurado para este mês.</p>
+            <p className="text-sm text-[#828282] font-inter py-6">Nenhum orçamento configurado para {monthName}.</p>
           ) : (
             <div className="space-y-4">
               {summary.budgetsOverview.map((b) => (

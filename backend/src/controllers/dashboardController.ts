@@ -6,8 +6,26 @@ export const getDashboardSummary = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+
+    if (req.query.month !== undefined || req.query.year !== undefined) {
+      const requestedMonth = typeof req.query.month === 'string' ? Number(req.query.month) : NaN;
+      const requestedYear = typeof req.query.year === 'string' ? Number(req.query.year) : NaN;
+      const requestedDate = new Date(requestedYear, requestedMonth - 1, 1);
+      const currentMonthDate = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      if (
+        !Number.isInteger(requestedMonth) || requestedMonth < 1 || requestedMonth > 12
+        || !Number.isInteger(requestedYear) || requestedYear < 2000 || requestedYear > now.getFullYear()
+        || requestedDate > currentMonthDate
+      ) {
+        return res.status(400).json({ error: 'Selecione um mês válido, até o mês atual.' });
+      }
+
+      currentMonth = requestedMonth - 1;
+      currentYear = requestedYear;
+    }
 
     const startOfMonth = new Date(currentYear, currentMonth, 1);
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
